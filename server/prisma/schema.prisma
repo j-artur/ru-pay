@@ -1,0 +1,77 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id             Int        @id @default(autoincrement())
+  name           String
+  email          String     @unique
+  password       String
+  profilePicture String?
+  university     University @relation(fields: [universityId], references: [id])
+  payments       Payment[]
+  universityId   Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model University {
+  id             Int        @id @default(autoincrement())
+  name           String     @unique
+  profilePicture String?
+  users          User[]
+  meals          Meal[]
+  employees      Employee[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Employee {
+  id           Int        @id @default(autoincrement())
+  name         String
+  email        String     @unique
+  password     String
+  university   University @relation(fields: [universityId], references: [id])
+  universityId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Meal {
+  id           Int        @id @default(autoincrement())
+  name         String
+  description  String
+  price        Int
+  university   University @relation(fields: [universityId], references: [id])
+  universityId Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  payments Payment[]
+}
+
+model Payment {
+  id      Int      @id @default(autoincrement())
+  amount  Int
+  date    DateTime
+  receipt String
+  user    User     @relation(fields: [userId], references: [id])
+  meal    Meal     @relation(fields: [mealId], references: [id])
+  userId  Int
+  mealId  Int
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}

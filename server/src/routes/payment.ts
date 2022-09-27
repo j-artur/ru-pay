@@ -1,5 +1,9 @@
+import { PaymentStatus } from "@prisma/client";
 import { Router } from "express";
+import { unlink } from "fs/promises";
+import path from "path";
 import { z } from "zod";
+import { uploadReceipt } from "../multer";
 import prisma from "../prisma";
 import { idParam } from "../util";
 
@@ -10,7 +14,6 @@ const searchParams = z
     // universityId: z.number().int(),
     fromDate: z.string().optional(),
     toDate: z.string().optional(),
-    receipt: z.string().optional(),
     userId: z.number().int().optional(),
     mealId: z.number().int().optional(),
   })
@@ -31,7 +34,7 @@ paymentRouter.get("/", async (req, res) => {
     const payments = await prisma.payment.findMany({
       where: {
         // meal: { universityId: params.universityId },
-        receipt: params.receipt,
+        date: { gte: params.fromDate, lte: params.toDate },
         userId: params.userId,
         mealId: params.mealId,
       },
@@ -50,7 +53,7 @@ paymentRouter.get("/", async (req, res) => {
 
 paymentRouter.get("/:id", async (req, res) => {
   try {
-    const { id } = idParam.parse(req.params.id);
+    const { id } = idParam.parse(req.params);
 
     const payment = await prisma.payment.findUnique({ where: { id } });
 
@@ -70,20 +73,27 @@ paymentRouter.get("/:id", async (req, res) => {
 });
 
 const createInput = z.object({
-  // universityId: z.number().int(),
-  receipt: z.string(),
-  userId: z.number().int(),
-  mealId: z.number().int(),
+  date: z.string(),
+  receipt: z.any(),
+  userId: z.string().transform(Number),
+  mealId: z.string().transform(Number),
 });
 
-paymentRouter.post("/", async (req, res) => {
+paymentRouter.post("/", uploadReceipt.single("receipt"), async (req, res) => {
+  if (!req.file) {
+    res.status(400).json({ error: "No receipt file provided" });
+    return;
+  }
   try {
     const input = createInput.parse(req.body);
+
+    console.log(req.file.path);
 
     // const university = await prisma.university.findUnique({
     //   where: { id: input.universityId },
     // });
     // if (!university) {
+    //   await unlink(req.file.path);
     //   res.sendStatus(404);
     //   return;
     // }
@@ -91,7 +101,9 @@ paymentRouter.post("/", async (req, res) => {
     const user = await prisma.user.findUnique({
       where: { id: input.userId },
     });
-    if (!user /* || user.universityId !== input.universityId */) {
+    if (!user) {
+      console.log("User not found");
+      await unlink(req.file.path);
       res.sendStatus(404);
       return;
     }
@@ -99,15 +111,89 @@ paymentRouter.post("/", async (req, res) => {
     const meal = await prisma.meal.findUnique({
       where: { id: input.mealId },
     });
-    if (!meal /* || meal.universityId !== input.universityId */) {
+    if (!meal) {
+      console.log("Meal not found");
+      await unlink(req.file.path);
       res.sendStatus(404);
       return;
     }
 
-    const data = { ...input, universityId: undefined };
+    // if (meal.universityId !== user.universityId) {
+    //   await unlink(req.file.path);
+    //   res.sendStatus(403);
+    //   return;
+    // }
+
+    const data = {
+      ...input,
+      receipt: undefined,
+      receiptUrl: req.file.filename,
+    };
     const payment = await prisma.payment.create({ data });
 
     res.status(201).json(payment);
+  } catch (error) {
+    await unlink(req.file.path);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
+  }
+});
+
+const updateInput = z.object({
+  status: z
+    .string()
+    .optional()
+    .refine(v => Object.keys(PaymentStatus).includes(v!), "Invalid status")
+    .transform(v => v as PaymentStatus),
+});
+
+paymentRouter.patch("/:id", async (req, res) => {
+  try {
+    const { id } = idParam.parse(req.params);
+    const input = updateInput.parse(req.body);
+
+    const payment = await prisma.payment.findUnique({ where: { id } });
+    if (!payment) {
+      res.sendStatus(404);
+      return;
+    }
+    if (
+      payment.status === "Redeemed" ||
+      payment.status === "Rejected" ||
+      payment.status === "Cancelled"
+    ) {
+      res.sendStatus(403);
+      return;
+    }
+    if (
+      payment.status === "Pending" &&
+      input.status !== "Approved" &&
+      input.status !== "Rejected" &&
+      input.status !== "Cancelled"
+    ) {
+      res.sendStatus(403);
+      return;
+    }
+    if (payment.status === "Approved" && input.status !== "Redeemed") {
+      res.sendStatus(403);
+      return;
+    }
+
+    if (payment.receiptUrl != null) {
+      await unlink(
+        path.resolve(__dirname, "..", "..", "uploads", payment.receiptUrl),
+      );
+    }
+
+    const data = { ...input, receiptUrl: null };
+
+    const updatedPayment = await prisma.payment.update({ where: { id }, data });
+
+    res.status(200).json(updatedPayment);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -120,7 +206,7 @@ paymentRouter.post("/", async (req, res) => {
 
 paymentRouter.delete("/:id", async (req, res) => {
   try {
-    const { id } = idParam.parse(req.params.id);
+    const { id } = idParam.parse(req.params);
 
     const payment = await prisma.payment.findUnique({ where: { id } });
     if (!payment) {

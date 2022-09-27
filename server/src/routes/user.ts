@@ -46,7 +46,7 @@ userRouter.get("/", async (req, res) => {
 
 userRouter.get("/:id", async (req, res) => {
   try {
-    const { id } = idParam.parse(req.params.id);
+    const { id } = idParam.parse(req.params);
 
     const user = await prisma.user.findUnique({
       where: { id },

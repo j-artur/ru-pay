@@ -62,14 +62,23 @@ model Meal {
   payments Payment[]
 }
 
+enum PaymentStatus {
+  Pending
+  Cancelled
+  Rejected
+  Approved
+  Redeemed
+}
+
 model Payment {
-  id       Int     @id @default(autoincrement())
-  receipt  String
-  user     User    @relation(fields: [userId], references: [id])
-  meal     Meal    @relation(fields: [mealId], references: [id])
-  userId   Int
-  mealId   Int
-  redeemed Boolean @default(false)
+  id         Int           @id @default(autoincrement())
+  receiptUrl String?
+  user       User          @relation(fields: [userId], references: [id])
+  meal       Meal          @relation(fields: [mealId], references: [id])
+  date       DateTime
+  status     PaymentStatus @default(Pending)
+  userId     Int
+  mealId     Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

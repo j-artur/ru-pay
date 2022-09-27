@@ -32,7 +32,7 @@
 
 // universityRouter.get("/:id", async (req, res) => {
 //   try {
-//     const { id } = idParam.parse(req.params.id);
+//     const { id } = idParam.parse(req.params);
 
 //     const university = await prisma.university.findUnique({
 //       where: { id },

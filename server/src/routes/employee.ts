@@ -47,7 +47,7 @@ employeeRouter.get("/", async (req, res) => {
 
 employeeRouter.get("/:id", async (req, res) => {
   try {
-    const { id } = idParam.parse(req.params.id);
+    const { id } = idParam.parse(req.params);
 
     const employee = await prisma.employee.findUnique({
       where: { id },

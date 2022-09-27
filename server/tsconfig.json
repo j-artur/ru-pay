@@ -1,4 +1,11 @@
 {
+  "exclude": [
+    "node_modules",
+    "dist",
+    "coverage",
+    "src/**/*.test.ts",
+    "jest.config.ts"
+  ],
   "compilerOptions": {
     "rootDir": "src",
     "outDir": "dist"

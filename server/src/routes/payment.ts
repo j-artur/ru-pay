@@ -7,8 +7,7 @@ const paymentRouter = Router();
 
 const searchParams = z
   .object({
-    universityId: z.number().int(),
-    amount: z.number().int().optional(),
+    // universityId: z.number().int(),
     fromDate: z.string().optional(),
     toDate: z.string().optional(),
     receipt: z.string().optional(),
@@ -31,9 +30,7 @@ paymentRouter.get("/", async (req, res) => {
 
     const payments = await prisma.payment.findMany({
       where: {
-        meal: { universityId: params.universityId },
-        amount: params.amount,
-        date: { gte: params.fromDate, lte: params.toDate },
+        // meal: { universityId: params.universityId },
         receipt: params.receipt,
         userId: params.userId,
         mealId: params.mealId,
@@ -45,6 +42,7 @@ paymentRouter.get("/", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -62,14 +60,17 @@ paymentRouter.get("/:id", async (req, res) => {
       res.sendStatus(404);
     }
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 
 const createInput = z.object({
-  universityId: z.number().int(),
-  amount: z.number().int(),
-  date: z.string(),
+  // universityId: z.number().int(),
   receipt: z.string(),
   userId: z.number().int(),
   mealId: z.number().int(),
@@ -79,18 +80,18 @@ paymentRouter.post("/", async (req, res) => {
   try {
     const input = createInput.parse(req.body);
 
-    const university = await prisma.university.findUnique({
-      where: { id: input.universityId },
-    });
-    if (!university) {
-      res.sendStatus(404);
-      return;
-    }
+    // const university = await prisma.university.findUnique({
+    //   where: { id: input.universityId },
+    // });
+    // if (!university) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
 
     const user = await prisma.user.findUnique({
       where: { id: input.userId },
     });
-    if (!user || user.universityId !== input.universityId) {
+    if (!user /* || user.universityId !== input.universityId */) {
       res.sendStatus(404);
       return;
     }
@@ -98,7 +99,7 @@ paymentRouter.post("/", async (req, res) => {
     const meal = await prisma.meal.findUnique({
       where: { id: input.mealId },
     });
-    if (!meal || meal.universityId !== input.universityId) {
+    if (!meal /* || meal.universityId !== input.universityId */) {
       res.sendStatus(404);
       return;
     }
@@ -108,7 +109,12 @@ paymentRouter.post("/", async (req, res) => {
 
     res.status(201).json(payment);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 
@@ -126,7 +132,12 @@ paymentRouter.delete("/:id", async (req, res) => {
 
     res.sendStatus(204);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 

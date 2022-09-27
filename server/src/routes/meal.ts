@@ -6,7 +6,7 @@ import { idParam } from "../util";
 const mealRouter = Router();
 
 const searchParams = z.object({
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
   name: z.string().optional(),
   description: z.string().optional(),
   price: z.number().int().optional(),
@@ -21,7 +21,7 @@ mealRouter.get("/", async (req, res) => {
         name: { contains: params.name },
         description: { contains: params.description },
         price: params.price,
-        universityId: params.universityId,
+        // universityId: params.universityId,
       },
     });
 
@@ -30,6 +30,7 @@ mealRouter.get("/", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -39,20 +40,20 @@ const createInput = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number().int(),
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
 });
 
 mealRouter.post("/", async (req, res) => {
   try {
     const data = createInput.parse(req.body);
 
-    const university = await prisma.university.findUnique({
-      where: { id: data.universityId },
-    });
-    if (!university) {
-      res.sendStatus(404);
-      return;
-    }
+    // const university = await prisma.university.findUnique({
+    //   where: { id: data.universityId },
+    // });
+    // if (!university) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
 
     const meal = await prisma.meal.create({ data });
 
@@ -61,6 +62,7 @@ mealRouter.post("/", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -93,6 +95,7 @@ mealRouter.put("/:id", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -112,7 +115,12 @@ mealRouter.delete("/:id", async (req, res) => {
 
     res.sendStatus(204);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 

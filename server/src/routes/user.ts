@@ -7,9 +7,9 @@ import { hashPassword, verifyPassword } from "../util/password";
 const userRouter = Router();
 
 const searchParams = z.object({
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
   name: z.string().optional(),
-  email: z.string().email().optional(),
+  registration: z.string().optional(),
 });
 
 userRouter.get("/", async (req, res) => {
@@ -19,8 +19,17 @@ userRouter.get("/", async (req, res) => {
     const users = await prisma.user.findMany({
       where: {
         name: { contains: params.name },
-        email: params.email,
-        universityId: params.universityId,
+        registration: params.registration,
+        // universityId: params.universityId,
+      },
+      select: {
+        id: true,
+        name: true,
+        registration: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
       },
     });
 
@@ -29,6 +38,38 @@ userRouter.get("/", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
+  }
+});
+
+userRouter.get("/:id", async (req, res) => {
+  try {
+    const { id } = idParam.parse(req.params.id);
+
+    const user = await prisma.user.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        registration: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
+    });
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.sendStatus(404);
+    }
+  } catch (error) {
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -36,32 +77,44 @@ userRouter.get("/", async (req, res) => {
 
 const createInput = z.object({
   name: z.string(),
-  email: z.string().email(),
+  registration: z.string(),
   password: z.string(),
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
 });
 
 userRouter.post("/", async (req, res) => {
   try {
     const input = createInput.parse(req.body);
 
-    const university = await prisma.university.findUnique({
-      where: { id: input.universityId },
-    });
-    if (!university) {
-      res.sendStatus(404);
-      return;
-    }
+    // const university = await prisma.university.findUnique({
+    //   where: { id: input.universityId },
+    // });
+    // if (!university) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
 
     const hashedPassword = await hashPassword(input.password);
     const data = { ...input, password: hashedPassword };
-    const user = await prisma.user.create({ data });
+    const user = await prisma.user.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+        registration: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
+    });
 
     res.status(201).json(user);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -69,7 +122,7 @@ userRouter.post("/", async (req, res) => {
 
 const updateInput = z.object({
   name: z.string().optional(),
-  email: z.string().email().optional(),
+  registration: z.string().optional(),
   password: z.string().optional(),
   currentPassword: z.string(),
 });
@@ -101,13 +154,26 @@ userRouter.put("/:id", async (req, res) => {
       password: hashedPassword,
       currentPassword: undefined,
     };
-    const updatedUser = await prisma.user.update({ where: { id }, data });
+    const updatedUser = await prisma.user.update({
+      where: { id },
+      data,
+      select: {
+        id: true,
+        name: true,
+        registration: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
+    });
 
     res.status(200).json(updatedUser);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -127,7 +193,12 @@ userRouter.delete("/:id", async (req, res) => {
 
     res.sendStatus(204);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 

@@ -7,7 +7,7 @@ import { hashPassword, verifyPassword } from "../util/password";
 const employeeRouter = Router();
 
 const searchParams = z.object({
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
   name: z.string().optional(),
   email: z.string().email().optional(),
 });
@@ -20,13 +20,28 @@ employeeRouter.get("/", async (req, res) => {
       where: {
         name: { contains: params.name },
         email: params.email,
-        universityId: params.universityId,
+        // universityId: params.universityId,
+      },
+
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
       },
     });
 
     res.status(200).json(employees);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 
@@ -34,7 +49,18 @@ employeeRouter.get("/:id", async (req, res) => {
   try {
     const { id } = idParam.parse(req.params.id);
 
-    const employee = await prisma.employee.findUnique({ where: { id } });
+    const employee = await prisma.employee.findUnique({
+      where: { id },
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
+    });
     if (employee) {
       res.status(200).json(employee);
     } else {
@@ -44,6 +70,7 @@ employeeRouter.get("/:id", async (req, res) => {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -53,28 +80,42 @@ const createInput = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
-  universityId: z.number().int(),
+  // universityId: z.number().int(),
 });
 
 employeeRouter.post("/", async (req, res) => {
   try {
     const input = createInput.parse(req.body);
 
-    const university = await prisma.university.findUnique({
-      where: { id: input.universityId },
-    });
-    if (!university) {
-      res.sendStatus(404);
-      return;
-    }
+    // const university = await prisma.university.findUnique({
+    //   where: { id: input.universityId },
+    // });
+    // if (!university) {
+    //   res.sendStatus(404);
+    //   return;
+    // }
 
-    const employee = await prisma.employee.create({ data: input });
+    const hashedPassword = await hashPassword(input.password);
+    const data = { ...input, password: hashedPassword };
+    const employee = await prisma.employee.create({
+      data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
+    });
 
     res.status(201).json(employee);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
     } else {
+      console.log(error);
       res.sendStatus(500);
     }
   }
@@ -117,12 +158,24 @@ employeeRouter.put("/:id", async (req, res) => {
     const updatedEmployee = await prisma.employee.update({
       where: { id },
       data,
+      select: {
+        id: true,
+        name: true,
+        email: true,
+        // universityId: true,
+        createdAt: true,
+        updatedAt: true,
+        password: false,
+      },
     });
 
     res.status(200).json(updatedEmployee);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
     }
   }
 });
@@ -141,7 +194,12 @@ employeeRouter.delete("/:id", async (req, res) => {
 
     res.sendStatus(204);
   } catch (error) {
-    res.sendStatus(500);
+    if (error instanceof z.ZodError) {
+      res.status(400).json(error);
+    } else {
+      console.log(error);
+      res.sendStatus(500);
+    }
   }
 });
 

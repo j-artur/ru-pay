@@ -11,50 +11,50 @@ datasource db {
 }
 
 model User {
-  id             Int        @id @default(autoincrement())
-  name           String
-  email          String     @unique
-  password       String
-  profilePicture String?
-  university     University @relation(fields: [universityId], references: [id])
-  payments       Payment[]
-  universityId   Int
+  id           Int       @id @default(autoincrement())
+  name         String
+  registration String
+  password     String
+  // university     University @relation(fields: [universityId], references: [id])
+  payments     Payment[]
+  // universityId   Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
-model University {
-  id             Int        @id @default(autoincrement())
-  name           String     @unique
-  profilePicture String?
-  users          User[]
-  meals          Meal[]
-  employees      Employee[]
+// model University {
+//   id             Int        @id @default(autoincrement())
+//   name           String     @unique
+//   profilePicture String?
+//   users          User[]
+//   meals          Meal[]
+//   employees      Employee[]
+//   pixKey         String
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
+//   createdAt DateTime @default(now())
+//   updatedAt DateTime @updatedAt
+// }
 
 model Employee {
-  id           Int        @id @default(autoincrement())
-  name         String
-  email        String     @unique
-  password     String
-  university   University @relation(fields: [universityId], references: [id])
-  universityId Int
+  id       Int    @id @default(autoincrement())
+  name     String
+  email    String @unique
+  password String
+  // university   University @relation(fields: [universityId], references: [id])
+  // universityId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Meal {
-  id           Int        @id @default(autoincrement())
-  name         String
-  description  String
-  price        Int
-  university   University @relation(fields: [universityId], references: [id])
-  universityId Int
+  id          Int    @id @default(autoincrement())
+  name        String
+  description String
+  price       Int
+  // university   University @relation(fields: [universityId], references: [id])
+  // universityId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -63,14 +63,13 @@ model Meal {
 }
 
 model Payment {
-  id      Int      @id @default(autoincrement())
-  amount  Int
-  date    DateTime
-  receipt String
-  user    User     @relation(fields: [userId], references: [id])
-  meal    Meal     @relation(fields: [mealId], references: [id])
-  userId  Int
-  mealId  Int
+  id       Int     @id @default(autoincrement())
+  receipt  String
+  user     User    @relation(fields: [userId], references: [id])
+  meal     Meal    @relation(fields: [mealId], references: [id])
+  userId   Int
+  mealId   Int
+  redeemed Boolean @default(false)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

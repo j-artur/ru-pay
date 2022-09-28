@@ -15,34 +15,17 @@ model User {
   name         String
   registration String
   password     String
-  // university     University @relation(fields: [universityId], references: [id])
   payments     Payment[]
-  // universityId   Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
-
-// model University {
-//   id             Int        @id @default(autoincrement())
-//   name           String     @unique
-//   profilePicture String?
-//   users          User[]
-//   meals          Meal[]
-//   employees      Employee[]
-//   pixKey         String
-
-//   createdAt DateTime @default(now())
-//   updatedAt DateTime @updatedAt
-// }
 
 model Employee {
   id       Int    @id @default(autoincrement())
   name     String
   email    String @unique
   password String
-  // university   University @relation(fields: [universityId], references: [id])
-  // universityId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,31 +34,24 @@ model Employee {
 model Meal {
   id          Int    @id @default(autoincrement())
   name        String
+  date        DateTime
   description String
   price       Int
-  // university   University @relation(fields: [universityId], references: [id])
-  // universityId Int
+  payments Payment[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
-
-  payments Payment[]
 }
 
 enum PaymentStatus {
   Pending
-  Cancelled
-  Rejected
-  Approved
   Redeemed
 }
 
 model Payment {
   id         Int           @id @default(autoincrement())
-  receiptUrl String?
   user       User          @relation(fields: [userId], references: [id])
   meal       Meal          @relation(fields: [mealId], references: [id])
-  date       DateTime
   status     PaymentStatus @default(Pending)
   userId     Int
   mealId     Int

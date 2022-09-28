@@ -6,7 +6,6 @@ import { idParam } from "../util";
 const mealRouter = Router();
 
 const searchParams = z.object({
-  // universityId: z.number().int(),
   name: z.string().optional(),
   description: z.string().optional(),
   price: z.number().int().optional(),
@@ -21,7 +20,6 @@ mealRouter.get("/", async (req, res) => {
         name: { contains: params.name },
         description: { contains: params.description },
         price: params.price,
-        // universityId: params.universityId,
       },
     });
 
@@ -40,20 +38,12 @@ const createInput = z.object({
   name: z.string(),
   description: z.string(),
   price: z.number().int(),
-  // universityId: z.number().int(),
+  date: z.string(),
 });
 
 mealRouter.post("/", async (req, res) => {
   try {
     const data = createInput.parse(req.body);
-
-    // const university = await prisma.university.findUnique({
-    //   where: { id: data.universityId },
-    // });
-    // if (!university) {
-    //   res.sendStatus(404);
-    //   return;
-    // }
 
     const meal = await prisma.meal.create({ data });
 

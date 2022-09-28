@@ -7,7 +7,6 @@ import { hashPassword, verifyPassword } from "../util/password";
 const employeeRouter = Router();
 
 const searchParams = z.object({
-  // universityId: z.number().int(),
   name: z.string().optional(),
   email: z.string().email().optional(),
 });
@@ -20,14 +19,12 @@ employeeRouter.get("/", async (req, res) => {
       where: {
         name: { contains: params.name },
         email: params.email,
-        // universityId: params.universityId,
       },
 
       select: {
         id: true,
         name: true,
         email: true,
-        // universityId: true,
         createdAt: true,
         updatedAt: true,
         password: false,
@@ -55,7 +52,6 @@ employeeRouter.get("/:id", async (req, res) => {
         id: true,
         name: true,
         email: true,
-        // universityId: true,
         createdAt: true,
         updatedAt: true,
         password: false,
@@ -80,20 +76,11 @@ const createInput = z.object({
   name: z.string(),
   email: z.string().email(),
   password: z.string(),
-  // universityId: z.number().int(),
 });
 
 employeeRouter.post("/", async (req, res) => {
   try {
     const input = createInput.parse(req.body);
-
-    // const university = await prisma.university.findUnique({
-    //   where: { id: input.universityId },
-    // });
-    // if (!university) {
-    //   res.sendStatus(404);
-    //   return;
-    // }
 
     const hashedPassword = await hashPassword(input.password);
     const data = { ...input, password: hashedPassword };
@@ -103,7 +90,6 @@ employeeRouter.post("/", async (req, res) => {
         id: true,
         name: true,
         email: true,
-        // universityId: true,
         createdAt: true,
         updatedAt: true,
         password: false,
@@ -162,7 +148,6 @@ employeeRouter.put("/:id", async (req, res) => {
         id: true,
         name: true,
         email: true,
-        // universityId: true,
         createdAt: true,
         updatedAt: true,
         password: false,

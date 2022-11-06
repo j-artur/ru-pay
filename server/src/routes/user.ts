@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
 import { idParam } from "../util";
+import { authenticateUser } from "../util/auth";
 import { hashPassword, verifyPassword } from "../util/password";
 
 const userRouter = Router();
@@ -71,41 +72,6 @@ userRouter.get("/:id", async (req, res) => {
   }
 });
 
-const createInput = z.object({
-  name: z.string(),
-  registration: z.string(),
-  password: z.string(),
-});
-
-userRouter.post("/", async (req, res) => {
-  try {
-    const input = createInput.parse(req.body);
-
-    const hashedPassword = await hashPassword(input.password);
-    const data = { ...input, password: hashedPassword };
-    const user = await prisma.user.create({
-      data,
-      select: {
-        id: true,
-        name: true,
-        registration: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
-    });
-
-    res.status(201).json(user);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json(error);
-    } else {
-      console.log(error);
-      res.sendStatus(500);
-    }
-  }
-});
-
 const updateInput = z.object({
   name: z.string().optional(),
   registration: z.string().optional(),
@@ -113,7 +79,7 @@ const updateInput = z.object({
   currentPassword: z.string(),
 });
 
-userRouter.put("/:id", async (req, res) => {
+userRouter.put("/:id", authenticateUser, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
     const input = updateInput.parse(req.body);
@@ -164,7 +130,7 @@ userRouter.put("/:id", async (req, res) => {
   }
 });
 
-userRouter.delete("/:id", async (req, res) => {
+userRouter.delete("/:id", authenticateUser, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
 

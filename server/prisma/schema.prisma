@@ -13,7 +13,7 @@ datasource db {
 model User {
   id           Int       @id @default(autoincrement())
   name         String
-  registration String
+  registration String    @unique
   password     String
   payments     Payment[]
 
@@ -31,13 +31,23 @@ model Employee {
   updatedAt DateTime @updatedAt
 }
 
+model MealType {
+  id       Int       @id @default(autoincrement())
+  name     String
+  price    Int
+  payments Payment[]
+  meals    Meal[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
 model Meal {
-  id          Int    @id @default(autoincrement())
-  name        String
+  id          Int      @id @default(autoincrement())
+  type        MealType @relation(fields: [mealTypeId], references: [id])
   date        DateTime
   description String
-  price       Int
-  payments Payment[]
+  mealTypeId  Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -51,10 +61,10 @@ enum PaymentStatus {
 model Payment {
   id         Int           @id @default(autoincrement())
   user       User          @relation(fields: [userId], references: [id])
-  meal       Meal          @relation(fields: [mealId], references: [id])
+  mealType   MealType      @relation(fields: [mealTypeId], references: [id])
   status     PaymentStatus @default(Pending)
   userId     Int
-  mealId     Int
+  mealTypeId Int
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt

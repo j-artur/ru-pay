@@ -3,23 +3,31 @@ import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
 import { idParam } from "../util";
+import {
+  authenticate,
+  authenticateEmployee,
+  authenticateUser,
+} from "../util/auth";
 
 const paymentRouter = Router();
 
-const searchParams = z
-  .object({
-    userId: z.number().int().optional(),
-    mealId: z.number().int().optional(),
-  })
+const searchParams = z.object({
+  userId: z.number().int().optional(),
+  mealTypeId: z.number().int().optional(),
+});
 
-paymentRouter.get("/", async (req, res) => {
+paymentRouter.get("/", authenticate, async (req, res) => {
   try {
     const params = searchParams.parse(req.query);
 
     const payments = await prisma.payment.findMany({
       where: {
         userId: params.userId,
-        mealId: params.mealId,
+        mealTypeId: params.mealTypeId,
+      },
+      include: {
+        user: true,
+        mealType: true,
       },
     });
 
@@ -34,11 +42,17 @@ paymentRouter.get("/", async (req, res) => {
   }
 });
 
-paymentRouter.get("/:id", async (req, res) => {
+paymentRouter.get("/:id", authenticate, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
 
-    const payment = await prisma.payment.findUnique({ where: { id } });
+    const payment = await prisma.payment.findUnique({
+      where: { id },
+      include: {
+        user: true,
+        mealType: true,
+      },
+    });
 
     if (payment) {
       res.status(200).json(payment);
@@ -57,10 +71,10 @@ paymentRouter.get("/:id", async (req, res) => {
 
 const createInput = z.object({
   userId: z.number().int(),
-  mealId: z.number().int(),
+  mealTypeId: z.number().int(),
 });
 
-paymentRouter.post("/", async (req, res) => {
+paymentRouter.post("/", authenticateUser, async (req, res) => {
   try {
     const input = createInput.parse(req.body);
 
@@ -73,11 +87,11 @@ paymentRouter.post("/", async (req, res) => {
       return;
     }
 
-    const meal = await prisma.meal.findUnique({
-      where: { id: input.mealId },
+    const mealType = await prisma.mealType.findUnique({
+      where: { id: input.mealTypeId },
     });
-    if (!meal) {
-      console.log("Meal not found");
+    if (!mealType) {
+      console.log("Meal type not found");
       res.sendStatus(404);
       return;
     }
@@ -103,7 +117,7 @@ const updateInput = z.object({
     .transform(v => v as PaymentStatus),
 });
 
-paymentRouter.patch("/:id", async (req, res) => {
+paymentRouter.patch("/:id", authenticateEmployee, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
     const input = updateInput.parse(req.body);
@@ -118,7 +132,10 @@ paymentRouter.patch("/:id", async (req, res) => {
       return;
     }
 
-    const updatedPayment = await prisma.payment.update({ where: { id }, data: input });
+    const updatedPayment = await prisma.payment.update({
+      where: { id },
+      data: input,
+    });
 
     res.status(200).json(updatedPayment);
   } catch (error) {

@@ -8,7 +8,7 @@ const Footer = () => {
   return (
     <>
       {selected !== "login" && (
-        <footer className="fixed w-full bottom-0 py-4 px-8 text-center border-t-4 border-blue-500">
+        <footer className="fixed w-full bottom-0 py-4 px-8 text-center border-t-4 bg-background border-primary-default">
           <nav className="flex justify-between sm:justify-center sm:space-x-10">
             <NavLink selected={selected} href="/">
               Home

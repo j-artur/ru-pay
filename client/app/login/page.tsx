@@ -1,5 +1,4 @@
 import Link from "next/link"
-import React from "react"
 
 const Login = () => {
   return (
@@ -13,14 +12,17 @@ const Login = () => {
           <input
             type="text"
             placeholder="Matrícula"
-            className="my-4 bg-transparent text-center placeholder:text-white border-b-4 border-blue-500 focus:outline-none focus:border-blue-500 focus:placeholder:text-transparent"
+            className="my-4 bg-transparent text-center placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
           />
           <input
             type="password"
             placeholder="Senha"
-            className="mb-6 bg-transparent text-center placeholder:text-white border-b-4 border-blue-500 focus:outline-none focus:border-blue-500 focus:placeholder:text-transparent"
+            className="mb-6 bg-transparent text-center placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
           />
-          <Link href="/" className="bg-blue-500 rounded-md mt-2 mb-4 py-2 w-56">
+          <Link
+            href="/"
+            className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56"
+          >
             Entrar
           </Link>
           <div className="flex flex-col pt-4 underline text-lg w-fit">

@@ -11,10 +11,12 @@ const Pay = () => {
           className="ml-10 mr-auto my-auto w-64"
         />
       </div>
-      <div className="flex w-full justify-center h-12">
-        <h1 className="flex flex-grow text-2xl text-center items-center justify-center bg-blue-500 border-2 border-blue-600 w-24">
-          Pagamento
-        </h1>
+      <div className="flex w-full justify-center">
+        <div className="flex flex-grow text-4xl text-center items-center justify-center w-24 my-8">
+          <h1 className="border-b-primary-default border-b-2 pb-2">
+            Pagamento
+          </h1>
+        </div>
       </div>
       <div>
         <Payment />

@@ -12,8 +12,8 @@ const Payment = () => {
         <button
           onClick={() => setTypeMeal("lunch")}
           className={
-            "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-blue-600 w-32 " +
-            (typeMeal === "lunch" ? "bg-blue-500" : "")
+            "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +
+            (typeMeal === "lunch" ? "bg-primary-default" : "")
           }
         >
           Almoço
@@ -21,8 +21,8 @@ const Payment = () => {
         <button
           onClick={() => setTypeMeal("dinner")}
           className={
-            "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-blue-600 w-32 " +
-            (typeMeal === "dinner" ? "bg-blue-500" : "")
+            "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +
+            (typeMeal === "dinner" ? "bg-primary-default" : "")
           }
         >
           Jantar
@@ -35,8 +35,8 @@ const Payment = () => {
         <button
           onClick={() => setTypePayment("pix")}
           className={
-            "flex text-2xl text-center items-center justify-center border-2 border-blue-600 rounded w-64 p-2 " +
-            (typePayment === "pix" ? "bg-blue-500" : "")
+            "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-64 p-2 " +
+            (typePayment === "pix" ? "bg-primary-default" : "")
           }
         >
           Pix
@@ -44,8 +44,8 @@ const Payment = () => {
         <button
           onClick={() => setTypePayment("card")}
           className={
-            "flex text-2xl text-center items-center justify-center border-2 border-blue-600 rounded w-64 p-2 " +
-            (typePayment === "card" ? "bg-blue-500" : "")
+            "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-64 p-2 " +
+            (typePayment === "card" ? "bg-primary-default" : "")
           }
         >
           Cartão
@@ -53,7 +53,7 @@ const Payment = () => {
         <Link
           href="/"
           className={
-            "flex text-2xl text-center items-center justify-center border-2 border-blue-600 rounded w-56 p-2 bg-blue-500"
+            "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-56 p-2 bg-primary-default"
           }
         >
           Pagar

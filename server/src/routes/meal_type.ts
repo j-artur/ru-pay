@@ -4,25 +4,25 @@ import prisma from "../prisma";
 import { idParam } from "../util";
 import { authenticateEmployee } from "../util/auth";
 
-const mealRouter = Router();
+const mealTypeRouter = Router();
 
 const searchParams = z.object({
-  type: z.number().int().optional(),
-  date: z.string().optional(),
+  name: z.string().optional(),
+  price: z.number().int().optional(),
 });
 
-mealRouter.get("/", async (req, res) => {
+mealTypeRouter.get("/", async (req, res) => {
   try {
     const params = searchParams.parse(req.query);
 
-    const meals = await prisma.meal.findMany({
+    const mealTypes = await prisma.mealType.findMany({
       where: {
-        type: { id: params.type },
-        date: params.date,
+        name: { contains: params.name },
+        price: params.price,
       },
     });
 
-    res.status(200).json(meals);
+    res.status(200).json(mealTypes);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -33,14 +33,14 @@ mealRouter.get("/", async (req, res) => {
   }
 });
 
-mealRouter.get("/:id", async (req, res) => {
+mealTypeRouter.get("/:id", async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
 
-    const meal = await prisma.meal.findUnique({ where: { id } });
+    const mealType = await prisma.mealType.findUnique({ where: { id } });
 
-    if (meal) {
-      res.status(200).json(meal);
+    if (mealType) {
+      res.status(200).json(mealType);
     } else {
       res.sendStatus(404);
     }
@@ -55,24 +55,17 @@ mealRouter.get("/:id", async (req, res) => {
 });
 
 const createInput = z.object({
-  type: z.number().int(),
-  description: z.string(),
-  date: z.string(),
+  name: z.string(),
+  price: z.number().int(),
 });
 
-mealRouter.post("/", authenticateEmployee, async (req, res) => {
+mealTypeRouter.post("/", authenticateEmployee, async (req, res) => {
   try {
     const data = createInput.parse(req.body);
 
-    const meal = await prisma.meal.create({
-      data: {
-        type: { connect: { id: data.type } },
-        description: data.description,
-        date: data.date,
-      },
-    });
+    const mealType = await prisma.mealType.create({ data });
 
-    res.status(201).json(meal);
+    res.status(201).json(mealType);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -84,27 +77,27 @@ mealRouter.post("/", authenticateEmployee, async (req, res) => {
 });
 
 const updateInput = z.object({
-  description: z.string().optional(),
-  date: z.string().optional(),
+  name: z.string().optional(),
+  price: z.number().int().optional(),
 });
 
-mealRouter.put("/:id", authenticateEmployee, async (req, res) => {
+mealTypeRouter.put("/:id", authenticateEmployee, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
     const data = updateInput.parse(req.body);
 
-    const meal = await prisma.meal.findUnique({ where: { id } });
-    if (!meal) {
+    const mealType = await prisma.mealType.findUnique({ where: { id } });
+    if (!mealType) {
       res.sendStatus(404);
       return;
     }
 
-    const updatedMeal = await prisma.meal.update({
+    const updatedMealType = await prisma.mealType.update({
       where: { id },
       data,
     });
 
-    res.status(200).json(updatedMeal);
+    res.status(200).json(updatedMealType);
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -115,17 +108,17 @@ mealRouter.put("/:id", authenticateEmployee, async (req, res) => {
   }
 });
 
-mealRouter.delete("/:id", authenticateEmployee, async (req, res) => {
+mealTypeRouter.delete("/:id", authenticateEmployee, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
 
-    const meal = await prisma.meal.findUnique({ where: { id } });
-    if (!meal) {
+    const mealType = await prisma.mealType.findUnique({ where: { id } });
+    if (!mealType) {
       res.sendStatus(404);
       return;
     }
 
-    await prisma.meal.delete({ where: { id } });
+    await prisma.mealType.delete({ where: { id } });
 
     res.sendStatus(204);
   } catch (error) {
@@ -138,4 +131,4 @@ mealRouter.delete("/:id", authenticateEmployee, async (req, res) => {
   }
 });
 
-export default mealRouter;
+export default mealTypeRouter;

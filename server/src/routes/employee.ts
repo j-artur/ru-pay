@@ -2,6 +2,7 @@ import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
 import { idParam } from "../util";
+import { authenticateEmployee } from "../util/auth";
 import { hashPassword, verifyPassword } from "../util/password";
 
 const employeeRouter = Router();
@@ -72,41 +73,6 @@ employeeRouter.get("/:id", async (req, res) => {
   }
 });
 
-const createInput = z.object({
-  name: z.string(),
-  email: z.string().email(),
-  password: z.string(),
-});
-
-employeeRouter.post("/", async (req, res) => {
-  try {
-    const input = createInput.parse(req.body);
-
-    const hashedPassword = await hashPassword(input.password);
-    const data = { ...input, password: hashedPassword };
-    const employee = await prisma.employee.create({
-      data,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
-    });
-
-    res.status(201).json(employee);
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json(error);
-    } else {
-      console.log(error);
-      res.sendStatus(500);
-    }
-  }
-});
-
 const updateInput = z.object({
   name: z.string().optional(),
   email: z.string().email().optional(),
@@ -114,7 +80,7 @@ const updateInput = z.object({
   currentPassword: z.string(),
 });
 
-employeeRouter.put("/:id", async (req, res) => {
+employeeRouter.put("/:id", authenticateEmployee, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
     const input = updateInput.parse(req.body);
@@ -165,7 +131,7 @@ employeeRouter.put("/:id", async (req, res) => {
   }
 });
 
-employeeRouter.delete("/:id", async (req, res) => {
+employeeRouter.delete("/:id", authenticateEmployee, async (req, res) => {
   try {
     const { id } = idParam.parse(req.params);
 

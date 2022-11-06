@@ -1,9 +1,12 @@
+import cors from "cors";
 import express from "express";
 import prisma from "./prisma";
 import appRouter from "./routes";
 import { pixKey } from "./util/consts";
 
 const app = express();
+
+app.use(cors({ origin: "*" }));
 
 app.use(express.json());
 

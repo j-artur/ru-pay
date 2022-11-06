@@ -1,3 +1,6 @@
+"use client"
+
+import { AuthProvider } from "./auth_context"
 import Footer from "./footer"
 import "./globals.css"
 
@@ -14,8 +17,10 @@ const RootLayout = ({ children }: { children: React.ReactNode }) => {
         <link rel="icon" href="/favicon.ico" />
       </head>
       <body className="flex flex-col bg-background text-white">
-        <div className="flex-grow p-4 mb-16">{children}</div>
-        <Footer />
+        <AuthProvider>
+          <div className="flex-grow p-4 mb-16">{children}</div>
+          <Footer />
+        </AuthProvider>
       </body>
     </html>
   )

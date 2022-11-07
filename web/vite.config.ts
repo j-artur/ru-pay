@@ -16,6 +16,8 @@ export default defineConfig({
         "apple-touch-icon.png",
         "icon192.png",
         "icon512.png",
+        "masked-icon.png",
+        "robots.txt",
       ],
       manifest: {
         name: "RU Pay - Cliente",

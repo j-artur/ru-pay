@@ -12,6 +12,8 @@ body {
   padding: 0;
   margin: 0;
   font-family: Helvetica;
+  background-color: #08090c;
+  color: #fff;
 }
 
 * {

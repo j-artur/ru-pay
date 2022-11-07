@@ -42,18 +42,10 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
   }
 
   useEffect(() => {
-    if (token && !user) {
-      me().then((user) => setUser(user))
-    } else {
-      setUser(null)
-      setToken(null)
+    if (token) {
+      me().then(user => setUser(user))
     }
-
-    return () => {
-      saveUser(user)
-      saveToken(token)
-    }
-  }, [user, token])
+  }, [token])
 
   return (
     <AuthContext.Provider

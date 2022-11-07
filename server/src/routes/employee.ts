@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
-import { idParam } from "../util";
+import { exclude, idParam } from "../util";
 import { authenticateEmployee } from "../util/auth";
 import { hashPassword, verifyPassword } from "../util/password";
 
@@ -21,18 +21,11 @@ employeeRouter.get("/", async (req, res) => {
         name: { contains: params.name },
         email: params.email,
       },
-
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
 
-    res.status(200).json(employees);
+    res
+      .status(200)
+      .json(employees.map(employee => exclude(employee, "password")));
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -49,17 +42,9 @@ employeeRouter.get("/:id", async (req, res) => {
 
     const employee = await prisma.employee.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
     if (employee) {
-      res.status(200).json(employee);
+      res.status(200).json(exclude(employee, "password"));
     } else {
       res.sendStatus(404);
     }
@@ -87,17 +72,9 @@ employeeRouter.post("/", async (req, res) => {
     const data = { ...input, password: hashedPassword };
     const employee = await prisma.employee.create({
       data,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
 
-    res.status(201).json(employee);
+    res.status(201).json(exclude(employee, "password"));
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -145,17 +122,9 @@ employeeRouter.put("/:id", authenticateEmployee, async (req, res) => {
     const updatedEmployee = await prisma.employee.update({
       where: { id },
       data,
-      select: {
-        id: true,
-        name: true,
-        email: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
 
-    res.status(200).json(updatedEmployee);
+    res.status(200).json(exclude(updatedEmployee, "password"));
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);

@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
-import { idParam } from "../util";
+import { exclude, idParam } from "../util";
 import { authenticateUser } from "../util/auth";
 import { hashPassword, verifyPassword } from "../util/password";
 
@@ -21,17 +21,9 @@ userRouter.get("/", async (req, res) => {
         name: { contains: params.name },
         registration: params.registration,
       },
-      select: {
-        id: true,
-        name: true,
-        registration: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
 
-    res.status(200).json(users);
+    res.status(200).json(users.map(user => exclude(user, "password")));
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -48,17 +40,9 @@ userRouter.get("/:id", async (req, res) => {
 
     const user = await prisma.user.findUnique({
       where: { id },
-      select: {
-        id: true,
-        name: true,
-        registration: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
     if (user) {
-      res.status(200).json(user);
+      res.status(200).json(exclude(user, "password"));
     } else {
       res.sendStatus(404);
     }
@@ -109,17 +93,9 @@ userRouter.put("/:id", authenticateUser, async (req, res) => {
     const updatedUser = await prisma.user.update({
       where: { id },
       data,
-      select: {
-        id: true,
-        name: true,
-        registration: true,
-        createdAt: true,
-        updatedAt: true,
-        password: false,
-      },
     });
 
-    res.status(200).json(updatedUser);
+    res.status(200).json(exclude(updatedUser, "password"));
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);

@@ -2,7 +2,7 @@ import { PaymentStatus } from "@prisma/client";
 import { Router } from "express";
 import { z } from "zod";
 import prisma from "../prisma";
-import { idParam } from "../util";
+import { exclude, idParam } from "../util";
 import {
   authenticate,
   authenticateEmployee,
@@ -31,7 +31,12 @@ paymentRouter.get("/", authenticate, async (req, res) => {
       },
     });
 
-    res.status(200).json(payments);
+    res.status(200).json(
+      payments.map(payment => ({
+        ...payment,
+        user: exclude(payment.user, "password"),
+      })),
+    );
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -55,7 +60,10 @@ paymentRouter.get("/:id", authenticate, async (req, res) => {
     });
 
     if (payment) {
-      res.status(200).json(payment);
+      res.status(200).json({
+        ...payment,
+        user: exclude(payment.user, "password"),
+      });
     } else {
       res.sendStatus(404);
     }
@@ -96,9 +104,18 @@ paymentRouter.post("/", authenticateUser, async (req, res) => {
       return;
     }
 
-    const payment = await prisma.payment.create({ data: input });
+    const payment = await prisma.payment.create({
+      data: input,
+      include: {
+        user: true,
+        mealType: true,
+      },
+    });
 
-    res.status(201).json(payment);
+    res.status(201).json({
+      ...payment,
+      user: exclude(payment.user, "password"),
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);
@@ -135,9 +152,16 @@ paymentRouter.patch("/:id", authenticateEmployee, async (req, res) => {
     const updatedPayment = await prisma.payment.update({
       where: { id },
       data: input,
+      include: {
+        user: true,
+        mealType: true,
+      },
     });
 
-    res.status(200).json(updatedPayment);
+    res.status(200).json({
+      ...payment,
+      user: exclude(updatedPayment.user, "password"),
+    });
   } catch (error) {
     if (error instanceof z.ZodError) {
       res.status(400).json(error);

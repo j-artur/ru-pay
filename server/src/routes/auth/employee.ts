@@ -6,36 +6,9 @@ import {
   EmployeeJWT,
   signEmployeeJWT,
 } from "../../util/auth";
-import { hashPassword, verifyPassword } from "../../util/password";
+import { verifyPassword } from "../../util/password";
 
 const employeeAuthRouter = Router();
-
-const registerInput = z.object({
-  name: z.string(),
-  email: z.string(),
-  password: z.string(),
-});
-
-employeeAuthRouter.post("/register", async (req, res) => {
-  try {
-    const { name, email, password } = registerInput.parse(req.body);
-
-    const hashedPassword = await hashPassword(password);
-
-    const employee = await prisma.employee.create({
-      data: { name, email, password: hashedPassword },
-    });
-
-    res.status(201).json({ ...employee, password: undefined });
-  } catch (error) {
-    if (error instanceof z.ZodError) {
-      res.status(400).json(error);
-    } else {
-      console.log(error);
-      res.sendStatus(500);
-    }
-  }
-});
 
 const loginInput = z.object({
   email: z.string(),

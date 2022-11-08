@@ -2,7 +2,7 @@ import cors from "cors";
 import express from "express";
 import prisma from "./prisma";
 import appRouter from "./routes";
-import { pixKey } from "./util/consts";
+import { pixKey, port } from "./util/consts";
 
 const app = express();
 
@@ -19,8 +19,8 @@ prisma
   .then(async () => {
     console.log(pixKey);
 
-    app.listen(3030, () => {
-      console.log("Server started on port 3030");
+    app.listen(port, () => {
+      console.log(`Server started on port ${port}`);
     });
   })
   .catch(error => {

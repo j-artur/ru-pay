@@ -2,8 +2,10 @@ import { FaAngleLeft, FaAngleRight } from "react-icons/fa"
 import { Navigate } from "react-router-dom"
 import Footer from "../components/footer"
 import { useAuth } from "../components/auth_context"
-import { getMeal } from "../services/api/meal"
+import { getMeal, getMeals, Meal } from "../services/api/meal"
 import { useEffect, useState } from "react"
+import { getMealTypes, MealType } from "../services/api/meal_type"
+import Container from "../components/container"
 
 const Menu = () => {
   const { token } = useAuth()
@@ -11,20 +13,30 @@ const Menu = () => {
     return <Navigate to="/login" />
   }
 
-  const [meal, setMeal] = useState("")
-  const [mealType, setMealType] = useState("lunch")
+  const [meals, setMeals] = useState([] as Meal[])
+  const [mealTypes, setMealTypes] = useState([] as MealType[])
+  const [selectedMealType, setSelectedMealType] = useState(0)
 
   const d = new Date()
   d.setHours(0, 0, 0, 0)
   const [date, setDate] = useState(d)
 
   useEffect(() => {
-    getMeal(1).then(meal => setMeal(meal.description))
-  }, [])
+    getMealTypes().then(mealTypes => {
+      setMealTypes(mealTypes)
+      setSelectedMealType(mealTypes[0].id)
+    })
+    getMeals({ date: date.toISOString() }).then(meal => setMeals(meal))
+  }, [date])
+
+  const meal = meals.find(
+    meal =>
+      meal.mealTypeId === selectedMealType && meal.date === date.toISOString(),
+  )
 
   return (
     <>
-      <div className="p-4">
+      <Container>
         <div className="flex">
           <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
           <img
@@ -64,44 +76,55 @@ const Menu = () => {
           </button>
         </div>
         <div className="flex justify-center space-x-12 p-4">
-          <button
-            onClick={() => setMealType("lunch")}
-            className={`${
-              mealType === "lunch" ? "bg-primary-default" : " "
-            } py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-24`}
-          >
-            Almoço
-          </button>
-          <button
-            onClick={() => setMealType("dinner")}
-            className={` ${
-              mealType === "dinner" ? "bg-primary-default" : " "
-            } py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-24`}
-          >
-            Jantar
-          </button>
+          {mealTypes.map(curMealType => (
+            <button
+              onClick={() => setSelectedMealType(curMealType.id)}
+              className={
+                "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +
+                (curMealType.id === selectedMealType
+                  ? "bg-primary-default"
+                  : "")
+              }
+            >
+              {curMealType.name.charAt(0).toUpperCase() +
+                curMealType.name.slice(1)}
+            </button>
+          ))}
         </div>
         <div>
           <div className="flex justify-center">
-            <table className="w-full">
-              <thead>
-                <tr className="border-b-primary-default border-b-4">
-                  <th className="text-left text-2xl">Menu</th>
-                  <th className="text-left text-2xl">Item</th>
-                </tr>
-              </thead>
-              <tbody>
-                {/* {Object.entries(JSON.parse(meal)).map(([key, value]) => (
-                  <tr key={key} className="border-b-primary-default border-b-2">
-                    <td className="text-left text-2xl">{key}</td>
-                    <td className="text-left text-2xl">{value}</td>
+            {meal ? (
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b-primary-default border-b-4">
+                    <th className="text-left text-2xl">Menu</th>
+                    <th className="text-left text-2xl">Item</th>
                   </tr>
-                ))} */}
-              </tbody>
-            </table>
+                </thead>
+                <tbody>
+                  {Object.entries(JSON.parse(meal.description)).map(
+                    ([key, value]) => (
+                      <tr
+                        key={key}
+                        className="border-b-primary-default border-b-2"
+                      >
+                        <td className="text-left text-2xl">{key}</td>
+                        <td className="text-left text-2xl">
+                          {value as string}
+                        </td>
+                      </tr>
+                    ),
+                  )}
+                </tbody>
+              </table>
+            ) : (
+              <div>
+                Ainda não temos uma entrada para o dia e a refeição solicitados.
+              </div>
+            )}
           </div>
         </div>
-      </div>
+      </Container>
       <Footer />
     </>
   )

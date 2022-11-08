@@ -4,6 +4,7 @@ import { useAuth } from "../components/auth_context"
 import { useEffect, useState } from "react"
 import { getMealTypes, MealType } from "../services/api/meal_type"
 import { createPayment } from "../services/api/payment"
+import Container from "../components/container"
 
 const Pay = () => {
   const navigate = useNavigate()
@@ -49,7 +50,7 @@ const Pay = () => {
   }
   return (
     <>
-      <div>
+      <Container>
         <div className="flex p-4">
           <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
           <img
@@ -120,7 +121,7 @@ const Pay = () => {
             </button>
           </div>
         </div>
-      </div>
+      </Container>
       <Footer />
     </>
   )

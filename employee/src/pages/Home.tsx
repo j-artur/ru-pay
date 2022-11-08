@@ -1,10 +1,9 @@
-import Footer from "../components/footer"
 import { Navigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import { useEffect, useState } from "react"
 import { getPayments, Payment } from "../services/api/payment"
-import QRCode from "react-qr-code"
-import Container from "../components/container"
+import { QrReader } from "react-qr-reader"
+import Footer from "../components/footer"
 
 const Home = () => {
   const { token, user } = useAuth()
@@ -22,33 +21,12 @@ const Home = () => {
           payment.userId === Number(user?.id) && payment.status === "Pending",
       )
       p && setPayment(p)
-      console.log(payment)
     })
   }, [])
 
-  const getQRCode = () => {
-    const qrCode = {
-      id: payment.id,
-      mealType: {
-        id: payment.mealType.id,
-        name: payment.mealType.name,
-        price: payment.mealType.price,
-      },
-      user: {
-        id: payment.user.id,
-        name: payment.user.name,
-        registration: payment.user.registration,
-      },
-      userId: payment.userId,
-      status: payment.status,
-    }
-
-    return JSON.stringify(qrCode)
-  }
-
   return (
     <>
-      <Container>
+      <div>
         <div className="flex p-4">
           <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
           <img
@@ -60,29 +38,28 @@ const Home = () => {
         <div className="flex w-full justify-center">
           <div className="flex flex-grow text-4xl text-center items-center justify-center w-24 my-8">
             <h1 className="border-b-primary-default border-b-2 pb-2">
-              Voucher
+              Página principal
             </h1>
           </div>
         </div>
         <div>
           <div className="flex justify-center space-x-12 p-4">
-            {payment.id === undefined ? (
-              <div className="w-2/3 text-center">
-                Olá, {user?.name}. Você ainda não tem um voucher, por favor, vá
-                para a aba "Pagar" e compre um para poder ter direito a sua
-                refeição no ru.
-              </div>
-            ) : (
-              <div>
-                <div className="text-center mb-4">Aqui está seu voucher:</div>
-                <div className="p-4 bg-white">
-                  <QRCode value={getQRCode()} />
-                </div>
-              </div>
-            )}
+            <QrReader
+              className="w-1/2"
+              constraints={{ width: 300 }}
+              onResult={(result, error) => {
+                if (!!result) {
+                  console.log(result)
+                }
+                if (!!error) {
+                  console.log(error)
+                }
+              }}
+            />
+            aa
           </div>
         </div>
-      </Container>
+      </div>
       <Footer />
     </>
   )

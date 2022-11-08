@@ -1,6 +1,7 @@
 import { Navigate } from "react-router-dom"
 import Footer from "../components/footer"
 import { useAuth } from "../components/auth_context"
+import Container from "../components/container"
 
 const About = () => {
   const { token } = useAuth()
@@ -9,8 +10,8 @@ const About = () => {
     return <Navigate to="/login" />
   }
   return (
-    <div>
-      <div>
+    <>
+      <Container>
         <div className="h-screen-4/5 flex flex-col justify-center items-center">
           <div>
             <p className="text-xl mb-3">
@@ -29,9 +30,9 @@ const About = () => {
           </div>
         </div>
         <div className="text-center ">RU Pay &copy; 2022</div>
-      </div>
+      </Container>
       <Footer />
-    </div>
+    </>
   )
 }
 

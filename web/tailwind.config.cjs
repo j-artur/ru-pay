@@ -25,6 +25,7 @@ module.exports = {
           default: colors.blue["500"],
           dark: colors.blue["700"],
           light: colors.blue["300"],
+          transparent: colors.blue["500"] + "60",
         },
         secondary: {
           default: colors.purple["500"],

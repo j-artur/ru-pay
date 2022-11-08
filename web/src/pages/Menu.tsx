@@ -1,11 +1,11 @@
+import { useEffect, useState } from "react"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa"
 import { Navigate } from "react-router-dom"
-import Footer from "../components/footer"
 import { useAuth } from "../components/auth_context"
-import { getMeal, getMeals, Meal } from "../services/api/meal"
-import { useEffect, useState } from "react"
-import { getMealTypes, MealType } from "../services/api/meal_type"
 import Container from "../components/container"
+import Footer from "../components/footer"
+import { getMeals, Meal } from "../services/api/meal"
+import { getMealTypes, MealType } from "../services/api/meal_type"
 
 const Menu = () => {
   const { token } = useAuth()
@@ -83,8 +83,8 @@ const Menu = () => {
               className={
                 "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +
                 (curMealType.id === selectedMealType
-                  ? "bg-primary-default"
-                  : "")
+                  ? "bg-primary-transparent border-transparent"
+                  : "border-primary-dark")
               }
             >
               {curMealType.name.charAt(0).toUpperCase() +

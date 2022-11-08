@@ -1,10 +1,10 @@
-import { Link, Navigate, useNavigate } from "react-router-dom"
-import Footer from "../components/footer"
-import { useAuth } from "../components/auth_context"
 import { useEffect, useState } from "react"
+import { Navigate, useNavigate } from "react-router-dom"
+import { useAuth } from "../components/auth_context"
+import Container from "../components/container"
+import Footer from "../components/footer"
 import { getMealTypes, MealType } from "../services/api/meal_type"
 import { createPayment } from "../services/api/payment"
-import Container from "../components/container"
 
 const Pay = () => {
   const navigate = useNavigate()
@@ -80,8 +80,8 @@ const Pay = () => {
                 className={
                   "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +
                   (curMealType.name === selectedMealType.name
-                    ? "bg-primary-default"
-                    : "")
+                    ? "bg-primary-transparent border-transparent"
+                    : "border-primary-dark")
                 }
               >
                 {curMealType.name.charAt(0).toUpperCase() +
@@ -89,37 +89,45 @@ const Pay = () => {
               </button>
             ))}
           </div>
-          <div className="flex justify-center text-xl">
-            Valor: R${(selectedMealType.price / 100).toFixed(2)}
-          </div>
-          <div className="flex flex-col justify-center items-center p-4 space-y-10">
-            <button
-              onClick={() => setPaymentType("pix")}
-              className={
-                "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-64 p-2 " +
-                (paymentType === "pix" ? "bg-primary-default" : "")
-              }
-            >
-              Pix
-            </button>
-            <button
-              onClick={() => setPaymentType("card")}
-              className={
-                "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-64 p-2 " +
-                (paymentType === "card" ? "bg-primary-default" : "")
-              }
-            >
-              Cartão
-            </button>
-            <button
-              onClick={handlePayment}
-              className={
-                "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-56 p-2 bg-primary-default"
-              }
-            >
-              Pagar
-            </button>
-          </div>
+          {selectedMealType.id !== 0 && (
+            <>
+              <div className="flex justify-center text-xl">
+                Valor: R${(selectedMealType.price / 100).toFixed(2)}
+              </div>
+              <div className="flex flex-col justify-center items-center p-4 space-y-10">
+                <button
+                  onClick={() => setPaymentType("pix")}
+                  className={
+                    "flex text-2xl text-center items-center justify-center border-2 rounded w-64 p-2 " +
+                    (paymentType === "pix"
+                      ? "bg-primary-transparent border-transparent"
+                      : "border-primary-dark")
+                  }
+                >
+                  Pix
+                </button>
+                <button
+                  onClick={() => setPaymentType("card")}
+                  className={
+                    "flex text-2xl text-center items-center justify-center border-2 rounded w-64 p-2 " +
+                    (paymentType === "card"
+                      ? "bg-primary-transparent border-transparent"
+                      : "border-primary-dark")
+                  }
+                >
+                  Cartão
+                </button>
+                <button
+                  onClick={handlePayment}
+                  className={
+                    "flex text-2xl text-center items-center justify-center border-2 border-primary-dark rounded w-56 p-2 bg-primary-default"
+                  }
+                >
+                  Pagar
+                </button>
+              </div>
+            </>
+          )}
         </div>
       </Container>
       <Footer />

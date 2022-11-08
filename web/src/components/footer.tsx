@@ -10,22 +10,20 @@ const Footer = () => {
   }
 
   return (
-    <>
-      <footer className="fixed w-full bottom-0 py-4 px-8 text-center border-t-4 bg-background border-primary-default text-white">
-        <nav className="flex justify-between sm:justify-center sm:space-x-10">
-          <NavLink selected={selected} href="/">
-            Home
-          </NavLink>
-          <NavLink selected={selected} href="/pay">
-            Pagar
-          </NavLink>
-          <NavLink selected={selected} href="/menu">
-            Cardápio
-          </NavLink>
-          <button onClick={handleLogOut}>Log out</button>
-        </nav>
-      </footer>
-    </>
+    <footer className="w-full py-4 px-8 text-center border-t-4 bg-background border-primary-default text-white">
+      <nav className="flex justify-between sm:justify-center sm:space-x-10">
+        <NavLink selected={selected} href="/">
+          Home
+        </NavLink>
+        <NavLink selected={selected} href="/pay">
+          Pagar
+        </NavLink>
+        <NavLink selected={selected} href="/menu">
+          Cardápio
+        </NavLink>
+        <button onClick={handleLogOut}>Log out</button>
+      </nav>
+    </footer>
   )
 }
 

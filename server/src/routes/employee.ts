@@ -64,7 +64,7 @@ const createInput = z.object({
   password: z.string(),
 });
 
-employeeRouter.post("/", async (req, res) => {
+employeeRouter.post("/", authenticateEmployee, async (req, res) => {
   try {
     const input = createInput.parse(req.body);
 

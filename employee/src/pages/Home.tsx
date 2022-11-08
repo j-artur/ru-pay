@@ -129,7 +129,11 @@ const Home = () => {
             ) : reader ? (
               <QrReader
                 className="w-full"
-                constraints={{ width: 300, height: 300 }}
+                constraints={{
+                  width: 300,
+                  height: 300,
+                  facingMode: "environment",
+                }}
                 onResult={(result, error) => {
                   if (!!result && qrCodeCtrl) {
                     qrCodeCtrl = false

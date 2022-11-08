@@ -9,18 +9,6 @@ import userRouter from "./user";
 
 const appRouter = Router();
 
-appRouter.use((req, _, next) => {
-  console.log("Time: ", new Date().toLocaleString());
-  console.log({
-    method: req.method,
-    url: req.url,
-    body: req.body,
-    headers: req.headers,
-  });
-
-  next();
-});
-
 appRouter.use("/employees", employeeRouter);
 appRouter.use("/meals", mealRouter);
 appRouter.use("/meal_types", mealTypeRouter);

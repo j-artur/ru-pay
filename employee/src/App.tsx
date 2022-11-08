@@ -3,6 +3,7 @@ import { AuthProvider } from "./components/auth_context"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
 import RegisterMeal from "./pages/RegisterMeal"
+import RegisterMealType from "./pages/RegisterMealType"
 import "./styles/globals.css"
 
 function App() {
@@ -12,6 +13,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/register_mealType" element={<RegisterMealType />} />
           <Route path="/register_meal" element={<RegisterMeal />} />
         </Routes>
       </BrowserRouter>

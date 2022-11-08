@@ -4,6 +4,7 @@ import { Link, Navigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import Container from "../components/container"
 import Footer from "../components/footer"
+import LoggedAs from "../components/loggedAs"
 import {
   deleteMealType,
   getMealTypes,
@@ -51,6 +52,7 @@ const MealTypes = () => {
 
   return (
     <>
+      <LoggedAs />
       <Container>
         <div className="h-screen-1/10 flex flex-col justify-center text-center items-center space-y-10 pb-20">
           <div className="">
@@ -64,7 +66,7 @@ const MealTypes = () => {
           <div>
             <h1 className="text-2xl font-bold">Tipos de Refeição</h1>
 
-            <Link to="/register_meal">
+            <Link to="/register_meal_type">
               <button className="flex text-xl text-center items-center justify-center border-2 border-primary-dark rounded  p-2 bg-primary-default">
                 Cadastrar novo tipo de refeição
               </button>

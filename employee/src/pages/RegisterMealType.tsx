@@ -1,12 +1,14 @@
 import { useState } from "react"
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import Container from "../components/container"
 import Footer from "../components/footer"
 import { createMealType } from "../services/api/meal_type"
+import LoggedAs from "../components/loggedAs"
 
 const RegisterMealType = () => {
   const { token } = useAuth()
+  const navigate = useNavigate()
 
   const [mealName, setMealName] = useState("")
   const [mealPrice, setMealPrice] = useState(0)
@@ -16,18 +18,21 @@ const RegisterMealType = () => {
   }
 
   const handleSubmit = async (event: React.MouseEvent) => {
+    event.preventDefault()
     try {
       await createMealType({
         name: mealName,
         price: mealPrice,
       })
       alert("Refeição cadastrada com sucesso!")
+      navigate("/")
     } catch (error) {
       console.error(error)
     }
   }
   return (
     <>
+      <LoggedAs />
       <Container>
         <div className="h-screen-1/10 flex flex-col justify-center text-center items-center space-y-10 pb-20">
           <div className="">

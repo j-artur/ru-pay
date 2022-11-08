@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react"
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa"
-import { Navigate } from "react-router-dom"
+import { Link, Navigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import Container from "../components/container"
 import Footer from "../components/footer"
+import LoggedAs from "../components/loggedAs"
 import { getMeals, Meal } from "../services/api/meal"
 import { getMealTypes, MealType } from "../services/api/meal_type"
 
@@ -37,6 +38,7 @@ const Menu = () => {
 
   return (
     <>
+      <LoggedAs />
       <Container>
         <div className="flex">
           <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
@@ -91,6 +93,13 @@ const Menu = () => {
                 curMealType.name.slice(1)}
             </button>
           ))}
+        </div>
+        <div className="flex justify-center my-5">
+          <Link to="/register_meal">
+            <button className="flex text-xl text-center items-center justify-center border-2 border-primary-dark rounded  p-2 bg-primary-default">
+              Cadastrar nova refeição
+            </button>
+          </Link>
         </div>
         <div>
           <div className="flex justify-center">

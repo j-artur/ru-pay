@@ -1,11 +1,17 @@
-import { Navigate } from "react-router-dom"
+import { Navigate, useNavigate, useNavigation } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import { useEffect, useState } from "react"
-import { getPayments, Payment } from "../services/api/payment"
+import { confirmPayment, getPayment, Payment } from "../services/api/payment"
 import { QrReader } from "react-qr-reader"
 import Footer from "../components/footer"
+import Container from "../components/container"
+import LoggedAs from "../components/loggedAs"
 
 let qrCodeCtrl = false
+
+const refreshPage = () => {
+  window.location.reload()
+}
 
 const compare = (a: any, b: any): boolean => {
   return Object.entries(a)
@@ -20,21 +26,10 @@ const compare = (a: any, b: any): boolean => {
 }
 
 const Home = () => {
-  const { token, user } = useAuth()
+  const { token } = useAuth()
 
-  const [payment, setPayment] = useState({} as Payment)
+  const [payment, setPayment] = useState<Payment | null>(null)
   const [reader, setReader] = useState(false)
-  const [confirmation, setConfirmation] = useState(false)
-
-  useEffect(() => {
-    getPayments().then(payments => {
-      const p = payments.find(
-        payment =>
-          payment.userId === Number(user?.id) && payment.status === "Pending",
-      )
-      p && setPayment(p)
-    })
-  }, [])
 
   if (!token) {
     return <Navigate to="/login" />
@@ -44,19 +39,36 @@ const Home = () => {
     setReader(false)
     try {
       const userPayment = JSON.parse(text)
-      console.log(userPayment)
-      console.log(payment)
-      compare(userPayment, payment)
-        ? setConfirmation(true)
-        : console.log("QRCode inválido")
+
+      getPayment(userPayment.id).then(payment => {
+        if (compare(userPayment, payment)) {
+          setPayment(payment)
+        } else {
+          alert("QR Code inválido!")
+          refreshPage()
+        }
+      })
     } catch (error) {
       console.error(error)
     }
   }
 
+  const handleConfirmation = async () => {
+    try {
+      await confirmPayment(payment!.id)
+      alert("Pagamento confirmado com sucesso!")
+      setPayment(null)
+      refreshPage()
+    } catch (error) {
+      console.error(error)
+      alert("Erro ao confirmar pagamento!")
+    }
+  }
+
   return (
     <>
-      <div>
+      <LoggedAs />
+      <Container>
         <div className="flex p-4">
           <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
           <img
@@ -74,7 +86,7 @@ const Home = () => {
         </div>
         <div>
           <div className="flex justify-center space-x-12 p-4">
-            {confirmation ? (
+            {payment !== null ? (
               <div>
                 <div className="flex flex-col text-2xl">
                   <h1 className="text-2xl text-center">
@@ -103,11 +115,17 @@ const Home = () => {
                     </tbody>
                   </table>
                   <div className="flex justify-between">
-                    <button className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56">
+                    <button
+                      onClick={handleConfirmation}
+                      className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56"
+                    >
                       Confirmar Pagamento
                     </button>
-                    <button className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56">
-                      Rejeitar Pagamento
+                    <button
+                      onClick={() => refreshPage()}
+                      className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56"
+                    >
+                      Cancelar
                     </button>
                   </div>
                 </div>
@@ -138,7 +156,7 @@ const Home = () => {
             )}
           </div>
         </div>
-      </div>
+      </Container>
       <Footer />
     </>
   )

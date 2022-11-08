@@ -1,14 +1,16 @@
 import { useEffect, useState } from "react"
 import { FaBan, FaCheck, FaMinus, FaPlus } from "react-icons/fa"
-import { Navigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
+import { Navigate, useNavigate } from "react-router-dom"
 import Container from "../components/container"
 import Footer from "../components/footer"
 import { createMeal } from "../services/api/meal"
 import { getMealTypes, MealType } from "../services/api/meal_type"
+import LoggedAs from "../components/loggedAs"
 
 const RegisterMeal = () => {
   const { token } = useAuth()
+  const navigate = useNavigate()
 
   const [mealTypes, setMealTypes] = useState([] as MealType[])
   const [selectedMealType, setSelectedMealType] = useState(0)
@@ -43,7 +45,8 @@ const RegisterMeal = () => {
           }, {} as Record<string, string>),
         ),
       })
-      alert("Refeição cadastrada com sucesso!")
+      alert("Menu cadastrado com sucesso!")
+      navigate("/")
     } catch (error) {
       console.error(error)
       alert("Erro ao cadastrar refeição!")
@@ -51,8 +54,9 @@ const RegisterMeal = () => {
   }
   return (
     <>
+      <LoggedAs />
       <Container>
-        <div className="h-screen-1/10 flex flex-col justify-center text-center items-center space-y-10 pb-20">
+        <div className="flex flex-col justify-center text-center items-center space-y-10">
           <div className="">
             <img
               src="images/logo.png"
@@ -96,6 +100,7 @@ const RegisterMeal = () => {
                 {mealRows.map((row, index) => (
                   <div className="flex flex-row w-full" key={index}>
                     <input
+                      disabled={row.saved}
                       type="text"
                       placeholder="Menu"
                       className={
@@ -112,6 +117,7 @@ const RegisterMeal = () => {
                       }}
                     />
                     <textarea
+                      disabled={row.saved}
                       rows={3}
                       placeholder={"\nDescrição"}
                       className={

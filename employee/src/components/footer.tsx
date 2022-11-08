@@ -15,13 +15,13 @@ const Footer = () => {
         <NavLink selected={selected} href="/">
           Home
         </NavLink>
-        <NavLink selected={selected} href="/register_meal">
+        <NavLink selected={selected} href="/menu">
           Cardápio
         </NavLink>
-        <NavLink selected={selected} href="/register_mealType">
+        <NavLink selected={selected} href="/meal_types">
           Refeição
         </NavLink>
-        <NavLink selected={selected} href="/employee">
+        <NavLink selected={selected} href="/register_employee">
           Funcionário
         </NavLink>
         <button onClick={handleLogOut}>Log out</button>

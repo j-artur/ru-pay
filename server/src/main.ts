@@ -12,6 +12,12 @@ app.use(express.json());
 
 app.use(express.urlencoded({ extended: true }));
 
+app.use((req, _, next) => {
+  console.log(req.method, req.url);
+  console.log(req.body);
+  next();
+});
+
 app.use(appRouter);
 
 prisma

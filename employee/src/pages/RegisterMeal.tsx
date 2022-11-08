@@ -75,6 +75,7 @@ const RegisterMeal = () => {
                   onChange={event => {
                     const d = new Date(event.target.value)
                     d.setHours(12, 0, 0, 0)
+                    d.setDate(d.getDate() + 1)
                     setMealDate(d.toISOString())
                   }}
                 />

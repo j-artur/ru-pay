@@ -1,8 +1,8 @@
 import { useState } from "react"
-import { useAuth } from "../components/auth_context"
 import { Navigate } from "react-router-dom"
-import Footer from "../components/footer"
+import { useAuth } from "../components/auth_context"
 import Container from "../components/container"
+import Footer from "../components/footer"
 import { createMealType } from "../services/api/meal_type"
 
 const RegisterMealType = () => {
@@ -44,7 +44,7 @@ const RegisterMealType = () => {
                 Nome da refeição
                 <input
                   type="text"
-                  className="my-4 bg-transparent pl-3 placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
+                  className="my-4 bg-transparent pl-3 border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
                   value={mealName}
                   onChange={event => setMealName(event.target.value)}
                 />
@@ -54,7 +54,7 @@ const RegisterMealType = () => {
                 <input
                   type="number"
                   defaultValue={0}
-                  className="my-4 bg-transparent pl-3 placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
+                  className="my-4 bg-transparent pl-3 border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
                   value={mealPrice}
                   onChange={event => setMealPrice(parseInt(event.target.value))}
                 />

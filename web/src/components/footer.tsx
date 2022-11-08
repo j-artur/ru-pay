@@ -22,9 +22,6 @@ const Footer = () => {
           <NavLink selected={selected} href="/menu">
             Cardápio
           </NavLink>
-          <NavLink selected={selected} href="/about">
-            Sobre Nós
-          </NavLink>
           <button onClick={handleLogOut}>Log out</button>
         </nav>
       </footer>

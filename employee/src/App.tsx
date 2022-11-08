@@ -1,7 +1,8 @@
-import { BrowserRouter, Routes, Route } from "react-router-dom"
+import { BrowserRouter, Route, Routes } from "react-router-dom"
 import { AuthProvider } from "./components/auth_context"
 import Home from "./pages/Home"
 import Login from "./pages/Login"
+import MealTypes from "./pages/MealTypes"
 import RegisterMeal from "./pages/RegisterMeal"
 import RegisterMealType from "./pages/RegisterMealType"
 import "./styles/globals.css"
@@ -13,7 +14,8 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
-          <Route path="/register_mealType" element={<RegisterMealType />} />
+          <Route path="/meal_types" element={<MealTypes />} />
+          <Route path="/register_meal_type" element={<RegisterMealType />} />
           <Route path="/register_meal" element={<RegisterMeal />} />
         </Routes>
       </BrowserRouter>

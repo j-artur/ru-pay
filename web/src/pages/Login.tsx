@@ -1,8 +1,7 @@
 import { useState } from "react"
+import { Link, useNavigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
 import { login } from "../services/api/auth"
-import { Link, useNavigate, redirect } from "react-router-dom"
-import { getUsers } from "../services/api/user"
 
 const Login = () => {
   const navigate = useNavigate()
@@ -36,14 +35,14 @@ const Login = () => {
           <input
             type="text"
             placeholder="Matrícula"
-            className="my-4 bg-transparent text-center placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
+            className="my-4 bg-transparent text-center border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
             value={registration}
             onChange={event => setRegistration(event.target.value)}
           />
           <input
             type="password"
             placeholder="Senha"
-            className="mb-6 bg-transparent text-center placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
+            className="mb-6 bg-transparent text-center border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
             value={password}
             onChange={event => setPassword(event.target.value)}
           />

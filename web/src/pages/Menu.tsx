@@ -9,9 +9,6 @@ import Container from "../components/container"
 
 const Menu = () => {
   const { token } = useAuth()
-  if (!token) {
-    return <Navigate to="/login" />
-  }
 
   const [meals, setMeals] = useState([] as Meal[])
   const [mealTypes, setMealTypes] = useState([] as MealType[])
@@ -28,6 +25,10 @@ const Menu = () => {
     })
     getMeals({ date: date.toISOString() }).then(meal => setMeals(meal))
   }, [date])
+
+  if (!token) {
+    return <Navigate to="/login" />
+  }
 
   const meal = meals.find(
     meal =>

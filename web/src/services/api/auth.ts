@@ -8,7 +8,7 @@ interface RegisterParams {
 }
 
 export const register = async (params: RegisterParams): Promise<User> => {
-  const { data } = await api.post("/user_auth/register/user", params)
+  const { data } = await api.post("/user_auth/register/", params)
   return data
 }
 

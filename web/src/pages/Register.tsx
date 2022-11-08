@@ -1,14 +1,15 @@
 import { useState } from "react"
 import { useAuth } from "../components/auth_context"
-import { login } from "../services/api/auth"
+import { register } from "../services/api/auth"
 import { Link, useNavigate, redirect } from "react-router-dom"
 import { getUsers } from "../services/api/user"
 
-const Login = () => {
+const Register = () => {
   const navigate = useNavigate()
   const { saveToken, saveUser } = useAuth()
   const { user } = useAuth()
 
+  const [name, setName] = useState("")
   const [registration, setRegistration] = useState("")
   const [password, setPassword] = useState("")
 
@@ -16,12 +17,11 @@ const Login = () => {
     event.preventDefault()
 
     try {
-      const user = await login({ registration, password })
-      if (user) {
-        saveToken(user.token)
-        navigate("/")
-      }
+      await register({ name, registration, password })
+      alert("Cadastro realizado com sucesso!")
+      navigate("/")
     } catch (error) {
+      alert("Erro ao cadastrar")
       console.error(error)
     }
   }
@@ -33,6 +33,13 @@ const Login = () => {
       </div>
       <div>
         <form className="flex flex-col w-64 text-2xl items-center">
+          <input
+            type="text"
+            placeholder="Nome"
+            className="bg-transparent text-center placeholder:text-white border-b-4 border-primary-default focus:outline-none focus:border-primary-default focus:placeholder:text-transparent"
+            value={name}
+            onChange={event => setName(event.target.value)}
+          />
           <input
             type="text"
             placeholder="Matrícula"
@@ -51,18 +58,12 @@ const Login = () => {
             className="bg-primary-default rounded-md mt-2 mb-4 py-2 w-56"
             onClick={handleSubmit}
           >
-            Entrar
+            Cadastrar
           </button>
-          <div className="flex flex-col pt-4 underline text-lg w-fit">
-            <Link to="/login/#" className="mb-4">
-              Esqueci minha senha
-            </Link>
-            <Link to="/register">Não tenho cadastro</Link>
-          </div>
         </form>
       </div>
     </div>
   )
 }
 
-export default Login
+export default Register

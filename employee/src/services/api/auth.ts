@@ -1,5 +1,5 @@
 import api from "."
-import { User } from "./user"
+import { Employee } from "./employee"
 
 interface RegisterParams {
   name: string
@@ -7,7 +7,7 @@ interface RegisterParams {
   password: string
 }
 
-export const register = async (params: RegisterParams): Promise<User> => {
+export const register = async (params: RegisterParams): Promise<Employee> => {
   const { data } = await api.post("/employee_auth/register/employee", params)
   return data
 }

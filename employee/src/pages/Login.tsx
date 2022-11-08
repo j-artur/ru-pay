@@ -57,7 +57,6 @@ const Login = () => {
             <Link to="/login/#" className="mb-4">
               Esqueci minha senha
             </Link>
-            <Link to="/login/#">Não tenho cadastro</Link>
           </div>
         </form>
       </div>

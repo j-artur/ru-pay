@@ -9,10 +9,6 @@ import Container from "../components/container"
 const Home = () => {
   const { token, user } = useAuth()
 
-  if (!token) {
-    return <Navigate to="/login" />
-  }
-
   const [payment, setPayment] = useState({} as Payment)
 
   useEffect(() => {
@@ -25,6 +21,10 @@ const Home = () => {
       console.log(payment)
     })
   }, [])
+
+  if (!token) {
+    return <Navigate to="/login" />
+  }
 
   const getQRCode = () => {
     const qrCode = {

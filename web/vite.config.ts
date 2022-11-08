@@ -40,7 +40,7 @@ export default defineConfig({
           },
         ],
         theme_color: "#000000",
-        background_color: "#ffffff",
+        background_color: "#08090c",
       },
     }),
   ],

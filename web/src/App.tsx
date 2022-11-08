@@ -7,6 +7,7 @@ import Home from "./pages/Home"
 import About from "./pages/About"
 import Pay from "./pages/Pay"
 import Footer from "./components/footer"
+import Register from "./pages/Register"
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
           <Route path="/menu" element={<Menu />} />
           <Route path="/about" element={<About />} />
           <Route path="/pay" element={<Pay />} />
+          <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

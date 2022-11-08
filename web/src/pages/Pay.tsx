@@ -10,10 +10,6 @@ const Pay = () => {
   const navigate = useNavigate()
   const { token, user } = useAuth()
 
-  if (!token) {
-    return <Navigate to="/login" />
-  }
-
   const [selectedMealType, setSelectedMealType] = useState({
     id: 0,
     name: "",
@@ -32,6 +28,10 @@ const Pay = () => {
       })
     })
   }, [])
+
+  if (!token) {
+    return <Navigate to="/login" />
+  }
 
   const handlePayment = async (event: React.MouseEvent) => {
     event.preventDefault()

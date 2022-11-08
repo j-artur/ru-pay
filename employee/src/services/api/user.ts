@@ -3,7 +3,7 @@ import api from "."
 export interface User {
   id: number
   name: string
-  email: string
+  registration: string
   createdAt: string
   updatedAt: string
 }
@@ -14,29 +14,29 @@ interface SearchParams {
 }
 
 export const getUsers = async (params: SearchParams = {}): Promise<User[]> => {
-  const response = await api.get("/employees", { params })
+  const response = await api.get("/users", { params })
   return response.data
 }
 
 export const getUser = async (id: number): Promise<User> => {
-  const response = await api.get(`/employees/${id}`)
+  const response = await api.get(`/users/${id}`)
   return response.data
 }
 
 interface CreateParams {
   name: string
-  email: string
+  registration: string
   password: string
 }
 
 export const createUser = async (user: CreateParams): Promise<User> => {
-  const response = await api.post("/employee", user)
+  const response = await api.post("/users", user)
   return response.data
 }
 
 interface UpdateParams {
   name?: string
-  email?: string
+  registration?: string
   password?: string
   currentPassword: string
 }
@@ -45,11 +45,11 @@ export const updateUser = async (
   id: number,
   user: UpdateParams,
 ): Promise<User> => {
-  const response = await api.put(`/employees/${id}`, user)
+  const response = await api.put(`/users/${id}`, user)
   return response.data
 }
 
 export const deleteUser = async (id: number): Promise<void> => {
-  const response = await api.delete(`/employees/${id}`)
+  const response = await api.delete(`/users/${id}`)
   return response.data
 }

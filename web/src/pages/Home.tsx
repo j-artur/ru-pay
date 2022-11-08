@@ -1,10 +1,10 @@
-import Footer from "../components/footer"
+import { useEffect, useState } from "react"
+import QRCode from "react-qr-code"
 import { Navigate } from "react-router-dom"
 import { useAuth } from "../components/auth_context"
-import { useEffect, useState } from "react"
-import { getPayments, Payment } from "../services/api/payment"
-import QRCode from "react-qr-code"
 import Container from "../components/container"
+import Footer from "../components/footer"
+import { getPayments, Payment } from "../services/api/payment"
 
 const Home = () => {
   const { token, user } = useAuth()
@@ -49,13 +49,9 @@ const Home = () => {
   return (
     <>
       <Container>
-        <div className="flex p-4">
-          <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
-          <img
-            src="images/rupay.png"
-            alt="rupay"
-            className="ml-10 mr-auto my-auto w-64"
-          />
+        <div className="">
+          <img src="images/logo.png" alt="logo" className="m-auto w-32 pb-5" />
+          <img src="images/rupay.png" alt="rupay" className="m-auto w-64" />
         </div>
         <div className="flex w-full justify-center">
           <div className="flex flex-grow text-4xl text-center items-center justify-center w-24 my-8">

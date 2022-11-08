@@ -38,13 +38,9 @@ const Menu = () => {
   return (
     <>
       <Container>
-        <div className="flex">
-          <img src="images/logo.png" alt="logo" className="ml-auto w-32 pb-5" />
-          <img
-            src="images/rupay.png"
-            alt="rupay"
-            className="ml-10 mr-auto my-auto w-64"
-          />
+        <div className="">
+          <img src="images/logo.png" alt="logo" className="m-auto w-32 pb-5" />
+          <img src="images/rupay.png" alt="rupay" className="m-auto w-64" />
         </div>
         <div className="flex w-full justify-center h-12">
           <button

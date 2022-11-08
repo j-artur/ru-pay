@@ -15,7 +15,7 @@ const Menu = () => {
   const [selectedMealType, setSelectedMealType] = useState(0)
 
   const d = new Date()
-  d.setHours(0, 0, 0, 0)
+  d.setHours(12, 0, 0, 0)
   const [date, setDate] = useState(d)
 
   useEffect(() => {
@@ -69,7 +69,6 @@ const Menu = () => {
               const newDate = new Date(date)
               newDate.setDate(date.getDate() + 1)
               setDate(newDate)
-              console.log(date.toISOString())
             }}
             className="flex justify-center items-center bg-primary-default rounded-r-lg border-2 border-primary-dark w-12"
           >

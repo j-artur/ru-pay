@@ -15,10 +15,12 @@ mealRouter.get("/", async (req, res) => {
   try {
     const params = searchParams.parse(req.query);
 
+    const date = params.date ? standardDate(new Date(params.date)) : undefined;
+
     const meals = await prisma.meal.findMany({
       where: {
         type: { id: params.type },
-        date: params.date,
+        date,
       },
     });
 
@@ -64,11 +66,13 @@ mealRouter.post("/", authenticateEmployee, async (req, res) => {
   try {
     const data = createInput.parse(req.body);
 
+    const date = standardDate(new Date(data.date));
+
     const meal = await prisma.meal.create({
       data: {
         type: { connect: { id: data.type } },
         description: data.description,
-        date: data.date,
+        date,
       },
     });
 
@@ -99,9 +103,11 @@ mealRouter.put("/:id", authenticateEmployee, async (req, res) => {
       return;
     }
 
+    const date = data.date ? standardDate(new Date(data.date)) : undefined;
+
     const updatedMeal = await prisma.meal.update({
       where: { id },
-      data,
+      data: { description: data.description, date },
     });
 
     res.status(200).json(updatedMeal);

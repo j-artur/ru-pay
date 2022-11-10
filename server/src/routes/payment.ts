@@ -23,8 +23,11 @@ const searchParams = z.object({
   status: z
     .string()
     .optional()
-    .refine(v => Object.keys(PaymentStatus).includes(v!), "Invalid status")
-    .transform(v => v as PaymentStatus),
+    .refine(
+      v => (v ? Object.keys(PaymentStatus).includes(v!) : true),
+      "Invalid status",
+    )
+    .transform(v => v as PaymentStatus | undefined),
 });
 
 paymentRouter.get("/", authenticate, async (req, res) => {

@@ -23,10 +23,11 @@ export interface Payment {
 interface SearchParams {
   userId?: number
   mealTypeId?: number
+  status?: PaymentStatus
 }
 
 export const getPayments = async (
-  params: SearchParams = {}
+  params: SearchParams = {},
 ): Promise<Payment[]> => {
   const response = await api.get("/payments", { params })
   return response.data
@@ -43,7 +44,7 @@ interface CreateParams {
 }
 
 export const createPayment = async (
-  payment: CreateParams
+  payment: CreateParams,
 ): Promise<Payment> => {
   const response = await api.post("/payments", payment)
   return response.data
@@ -55,7 +56,7 @@ interface UpdateParams {
 
 export const updatePayment = async (
   id: number,
-  payment: UpdateParams
+  payment: UpdateParams,
 ): Promise<Payment> => {
   const response = await api.put(`/payments/${id}`, payment)
   return response.data

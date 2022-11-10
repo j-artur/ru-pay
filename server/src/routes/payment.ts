@@ -20,6 +20,11 @@ const searchParams = z.object({
     .string()
     .optional()
     .transform(s => (s ? parseInt(s) : undefined)),
+  status: z
+    .string()
+    .optional()
+    .refine(v => Object.keys(PaymentStatus).includes(v!), "Invalid status")
+    .transform(v => v as PaymentStatus),
 });
 
 paymentRouter.get("/", authenticate, async (req, res) => {
@@ -135,7 +140,6 @@ paymentRouter.post("/", authenticateUser, async (req, res) => {
 const updateInput = z.object({
   status: z
     .string()
-    .optional()
     .refine(v => Object.keys(PaymentStatus).includes(v!), "Invalid status")
     .transform(v => v as PaymentStatus),
 });

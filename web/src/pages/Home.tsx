@@ -5,7 +5,7 @@ import { useAuth } from "../components/auth_context"
 import Container from "../components/container"
 import Footer from "../components/footer"
 import { getMealTypes, MealType } from "../services/api/meal_type"
-import { getPayments, Payment } from "../services/api/payment"
+import { getPayments, Payment, PaymentStatus } from "../services/api/payment"
 
 const Home = () => {
   const { token, user } = useAuth()
@@ -16,7 +16,9 @@ const Home = () => {
 
   useEffect(() => {
     if (user) {
-      getPayments({ userId: user.id }).then(setPayments)
+      getPayments({ userId: user.id, status: PaymentStatus.Pending }).then(
+        setPayments,
+      )
       getMealTypes().then(types => {
         setMealTypes(types)
         setSelectedMealTypeId(types[0].id)
@@ -86,17 +88,20 @@ const Home = () => {
         <div>
           <div className="flex flex-col items-center justify-center space-x-12 p-4">
             {selectedPayments.length ? (
-              payments.map(payment => (
-                <div className="pb-8">
-                  <div className="text-center mb-4">Aqui está seu voucher:</div>
-                  <div className="flex justify-center">
-                    {payment.mealType.name}
-                  </div>
-                  <div className="p-4 bg-white">
-                    <QRCode value={getQRCode(payment)} />
-                  </div>
+              <>
+                <div className="text-center mb-4">
+                  Aqui estão seus vouchers:
                 </div>
-              ))
+                <div className="flex flex-col items-center justify-center space-x-12 p-4">
+                  {selectedPayments.map(payment => (
+                    <div className="pb-8">
+                      <div className="p-4 bg-white">
+                        <QRCode value={getQRCode(payment)} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </>
             ) : (
               <div className="w-2/3 text-center">
                 Olá, {user?.name}. Você ainda não tem um voucher, por favor, vá

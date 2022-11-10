@@ -57,7 +57,7 @@ const RegisterMeal = () => {
       <LoggedAs />
       <Container>
         <div className="flex flex-col justify-center text-center items-center space-y-10">
-          <div className="">
+          <div className="mb-10">
             <img
               src="images/logo.png"
               alt="logo"

@@ -55,7 +55,7 @@ const MealTypes = () => {
       <LoggedAs />
       <Container>
         <div className="h-screen-1/10 flex flex-col justify-center text-center items-center space-y-10 pb-20">
-          <div className="">
+          <div className="mb-10">
             <img
               src="images/logo.png"
               alt="logo"

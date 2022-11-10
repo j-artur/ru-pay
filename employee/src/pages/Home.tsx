@@ -69,7 +69,7 @@ const Home = () => {
     <>
       <LoggedAs />
       <Container>
-        <div className="">
+        <div className="mb-20">
           <img src="images/logo.png" alt="logo" className="m-auto w-32 pb-5" />
           <img src="images/rupay.png" alt="rupay" className="m-auto w-64" />
         </div>

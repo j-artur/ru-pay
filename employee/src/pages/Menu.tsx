@@ -35,7 +35,7 @@ const Menu = () => {
     <>
       <LoggedAs />
       <Container>
-        <div className="">
+        <div className="mb-10">
           <img src="images/logo.png" alt="logo" className="m-auto w-32 pb-5" />
           <img src="images/rupay.png" alt="rupay" className="m-auto w-64" />
         </div>

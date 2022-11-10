@@ -8,7 +8,10 @@ const mealTypeRouter = Router();
 
 const searchParams = z.object({
   name: z.string().optional(),
-  price: z.number().int().optional(),
+  price: z
+    .string()
+    .optional()
+    .transform(s => (s ? parseInt(s) : undefined)),
 });
 
 mealTypeRouter.get("/", async (req, res) => {

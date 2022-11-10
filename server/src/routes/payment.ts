@@ -12,8 +12,14 @@ import {
 const paymentRouter = Router();
 
 const searchParams = z.object({
-  userId: z.number().int().optional(),
-  mealTypeId: z.number().int().optional(),
+  userId: z
+    .string()
+    .optional()
+    .transform(s => (s ? parseInt(s) : undefined)),
+  mealTypeId: z
+    .string()
+    .optional()
+    .transform(s => (s ? parseInt(s) : undefined)),
 });
 
 paymentRouter.get("/", authenticate, async (req, res) => {

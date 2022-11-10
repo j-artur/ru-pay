@@ -8,7 +8,7 @@ import {
 } from "../services/api/auth"
 
 interface User {
-  id: string
+  id: number
   name: string
   registration: string
 }

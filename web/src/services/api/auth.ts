@@ -27,7 +27,7 @@ export const login = async (params: LoginParams): Promise<LoginResponse> => {
 }
 
 interface UserJWT {
-  id: string
+  id: number
   name: string
   registration: string
 }

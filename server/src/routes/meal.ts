@@ -8,7 +8,10 @@ import { standardDate } from "../util/date";
 const mealRouter = Router();
 
 const searchParams = z.object({
-  type: z.number().int().optional(),
+  type: z
+    .string()
+    .optional()
+    .transform(s => (s ? parseInt(s) : undefined)),
   date: z.string().optional(),
 });
 

@@ -68,7 +68,7 @@ const Home = () => {
             </h1>
           </div>
         </div>
-        <div className="flex justify-center space-x-12 p-4">
+        <div className="flex justify-center p-4">
           {mealTypes.map(curMealType => (
             <button
               key={curMealType.id}
@@ -86,13 +86,13 @@ const Home = () => {
           ))}
         </div>
         <div>
-          <div className="flex flex-col items-center justify-center space-x-12 p-4">
+          <div className="flex flex-col items-center justify-center p-4">
             {selectedPayments.length ? (
               <>
                 <div className="text-center mb-4">
                   Aqui estão seus vouchers:
                 </div>
-                <div className="flex flex-col items-center justify-center space-x-12 p-4">
+                <div className="flex flex-col items-center justify-center p-4">
                   {selectedPayments.map(payment => (
                     <div className="pb-8">
                       <div className="p-4 bg-white">

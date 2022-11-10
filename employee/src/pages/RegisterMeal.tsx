@@ -72,12 +72,9 @@ const RegisterMeal = () => {
                 <input
                   type="date"
                   className="w-full my-4 bg-transparent pl-3 border-b-4 border-primary-default focus:outline-none focus:border-primary-default "
-                  onChange={event => {
-                    const d = new Date(event.target.value)
-                    d.setHours(12, 0, 0, 0)
-                    d.setDate(d.getDate() + 1)
-                    setMealDate(d.toISOString())
-                  }}
+                  onChange={event =>
+                    setMealDate(new Date(event.target.value).toISOString())
+                  }
                 />
               </label>
               <label className="mt-5 w-full">

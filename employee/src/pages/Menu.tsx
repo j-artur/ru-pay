@@ -15,9 +15,7 @@ const Menu = () => {
   const [mealTypes, setMealTypes] = useState([] as MealType[])
   const [selectedMealType, setSelectedMealType] = useState(0)
 
-  const d = new Date()
-  d.setHours(0, 0, 0, 0)
-  const [date, setDate] = useState(d)
+  const [date, setDate] = useState(new Date())
 
   useEffect(() => {
     getMealTypes().then(mealTypes => {
@@ -31,10 +29,7 @@ const Menu = () => {
     return <Navigate to="/login" />
   }
 
-  const meal = meals.find(
-    meal =>
-      meal.mealTypeId === selectedMealType && meal.date === date.toISOString(),
-  )
+  const meal = meals.find(meal => meal.mealTypeId === selectedMealType)
 
   return (
     <>
@@ -77,6 +72,7 @@ const Menu = () => {
         <div className="flex justify-center space-x-12 p-4">
           {mealTypes.map(curMealType => (
             <button
+              key={curMealType.id}
               onClick={() => setSelectedMealType(curMealType.id)}
               className={
                 "py-1 px-2 text-2xl flex justify-center items-center  rounded border-2 border-primary-dark w-32 " +

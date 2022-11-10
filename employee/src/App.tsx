@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import MealTypes from "./pages/MealTypes"
 import Menu from "./pages/Menu"
+import Payments from "./pages/Payments"
 import RegisterEmployee from "./pages/RegisterEmployee"
 import RegisterMeal from "./pages/RegisterMeal"
 import RegisterMealType from "./pages/RegisterMealType"
@@ -21,6 +22,7 @@ function App() {
           <Route path="/register_meal" element={<RegisterMeal />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/register_employee" element={<RegisterEmployee />} />
+          <Route path="/payments" element={<Payments />} />
         </Routes>
       </BrowserRouter>
     </AuthProvider>

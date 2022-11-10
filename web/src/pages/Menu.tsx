@@ -21,7 +21,7 @@ const Menu = () => {
       setMealTypes(mealTypes)
       setSelectedMealType(mealTypes[0].id)
     })
-    getMeals({ date: date.toISOString() }).then(meal => setMeals(meal))
+    getMeals({ date }).then(meal => setMeals(meal))
   }, [date])
 
   if (!token) {

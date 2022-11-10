@@ -1,4 +1,5 @@
 import api from "."
+import { standardDate } from "../../util/date"
 
 export interface Meal {
   id: number
@@ -11,11 +12,14 @@ export interface Meal {
 
 interface SearchParams {
   type?: number
-  date?: string
+  date?: Date
 }
 
 export const getMeals = async (params: SearchParams = {}): Promise<Meal[]> => {
-  const response = await api.get("/meals", { params })
+  const date = params.date ? standardDate(params.date) : undefined
+  const response = await api.get("/meals", {
+    params: { type: params.type, date },
+  })
   return response.data
 }
 
@@ -42,7 +46,7 @@ interface UpdateParams {
 
 export const updateMeal = async (
   id: number,
-  meal: UpdateParams
+  meal: UpdateParams,
 ): Promise<Meal> => {
   const response = await api.put(`/meals/${id}`, meal)
   return response.data

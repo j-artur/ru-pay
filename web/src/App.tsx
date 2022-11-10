@@ -4,6 +4,7 @@ import Home from "./pages/Home"
 import Login from "./pages/Login"
 import Menu from "./pages/Menu"
 import Pay from "./pages/Pay"
+import Payments from "./pages/Payments"
 import Register from "./pages/Register"
 import "./styles/globals.css"
 
@@ -16,6 +17,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/menu" element={<Menu />} />
           <Route path="/pay" element={<Pay />} />
+          <Route path="/payments" element={<Payments />} />
           <Route path="/register" element={<Register />} />
         </Routes>
       </BrowserRouter>

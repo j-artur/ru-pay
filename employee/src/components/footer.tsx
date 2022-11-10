@@ -18,6 +18,9 @@ const Footer = () => {
         <NavLink selected={selected} href="/menu">
           Cardápio
         </NavLink>
+        <NavLink selected={selected} href="/payments">
+          Pagamentos
+        </NavLink>
         <NavLink selected={selected} href="/meal_types">
           Refeição
         </NavLink>
